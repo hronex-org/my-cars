@@ -1,0 +1,8 @@
+.cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4px;
+    padding: 24px;
+    max-width: 2800px;
+    margin: 0 auto;
+}
