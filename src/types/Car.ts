@@ -1,12 +1,19 @@
 export interface ServiceItem {
     description: string;
-    cost: number;
+    cost?: number;
+}
+
+export interface ServiceAttachment {
+    name: string;
+    fileUrl: string;
 }
 
 export interface Service {
     date: string;
     mileage: number;
     items: ServiceItem[];
+    paid: number;
+    attachments: ServiceAttachment[];
 }
 
 export interface Car {
@@ -18,5 +25,6 @@ export interface Car {
     registrationNumber: string;
     registrationExpiry: string;
     vignetteExpiry: string;
+    carMileage: number;
     services: Service[];
 }

@@ -1,10 +1,10 @@
 .car-card {
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 20px;
-    margin: 20px;
+    padding: 16px;
+    margin: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    background-color: rgb(233, 232, 232);
     max-width: 600px;
 }
 
@@ -15,6 +15,10 @@
     border-radius: 4px;
     margin-bottom: 16px;
     background-color: #f5f5f5; /* Light background for when image doesn't fill space */
+}
+
+.car-info {
+    margin: 0 0px 0px 0;
 }
 
 .car-info h2 {
@@ -90,9 +94,84 @@
     margin-top: 12px;
     padding-top: 12px;
     border-top: 2px solid #e0e0e0;
-    text-align: right;
+    /* Stack amounts vertically and align them to the right */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* align to the right */
+    gap: 6px; /* space between the two amounts */
     font-size: 1.1em;
+    color: #000; /* default to black for the calculated total */
+}
+
+.service-total .total-line {
+    color: #000; /* Skupaj should appear black/normal */
+    font-weight: normal;
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+.service-total .total-value {
+    margin-left: 6px;
+    font-style: italic;
+}
+
+.service-total .paid-line {
+    color: #1976d2; /* keep paid value style (blue) */
+    font-weight: bold;
+}
+
+.service-total .paid-value {
+    margin-left: 6px;
+}
+
+.service-attachments {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.service-attachments h5 {
+    margin: 0 0 8px 0;
+    color: #666;
+}
+
+.attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.attachment-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.attachment-item:hover {
+    background-color: #f5f5f5;
+    border-color: #1976d2;
     color: #1976d2;
+}
+
+.pdf-icon {
+    margin-bottom: 4px;
+    color: #e53935;
+}
+
+.attachment-item span {
+    font-size: 0.8em;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .progress-container {
