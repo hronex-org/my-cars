@@ -10,6 +10,10 @@ import bmwServiceMay2025_2 from '../assets/pdfs/bmw-redni-servis-2-17-05-2025.pd
 import espaceServiceAug2021 from '../assets/pdfs/espace-redni-servis-17-08-2021.pdf';
 import espacePdf from '../assets/pdfs/espace-redni-servis-21-10-2024.pdf';
 
+// add registration certificate image import (put your file in assets/registrations)
+import espaceRegistrationImage from '../assets/espace-registration.png';
+import espaceReg2025Pdf from '../assets/registrations/espace-registration-2025.pdf';
+
 // Sample data - replace with your actual car data
 const cars: Car[] = [
     {
@@ -17,9 +21,11 @@ const cars: Car[] = [
         make: "BMW",
         model: "520d",
         year: 2014,
-        imageUrl: bmwImage, // Using imported image
+        imageUrl: bmwImage,
         registrationNumber: "LJ52-UVC",
         registrationExpiry: "18.07.2026",
+        registrationCertificate: "/registrations/bmw-registration.jpg",
+        registrationPdfs: [],
         vignetteExpiry: "19.04.2026",
         carMileage: 130000,
         services: [
@@ -63,11 +69,32 @@ const cars: Car[] = [
         model: "TCe 200 Energy Initiale Paris EDC",
         year: 2016,
         imageUrl: renaultEspaceImage,
-        registrationNumber: "DEF456",
-        registrationExpiry: "11.11.2025",
-        vignetteExpiry: "13.01.2026",
+        registrationNumber: "LJ57-ZIJ",
+        registrationCertificate: espaceRegistrationImage, // <-- added,
+        registrationPdfs: [
+            { name: "Registracija - Espace.pdf", fileUrl: espaceReg2025Pdf },
+        ],
+        registrationExpiry: "11.11.2026",
+        vignetteExpiry: "06.11.2026",
         carMileage: 137000,
         services: [
+            {
+                date: "06.11.2025",
+                mileage: 138841,
+                items: [
+                    {
+                        description: "Potrdilo o tehničnem pregledu vozila",
+                        cost: 38.28
+                    }
+                ],
+                paid: 388.14,
+                attachments: [
+                    {
+                        name: "Račun.pdf",
+                        fileUrl: espacePdf
+                    }
+                ]
+            },
             {
                 date: "21.10.2024",
                 mileage: 126459,

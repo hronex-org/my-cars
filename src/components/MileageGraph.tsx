@@ -39,7 +39,7 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
             });
         }
 
-        // Create the chart
+        // Create the chart with fixed Y-axis range 0..300000
         const chart = new CanvasJS.Chart(chartContainerId, {
             animationEnabled: true,
             theme: "light2",
@@ -55,7 +55,10 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
             },
             axisY: {
                 title: "Kilometri",
-                includeZero: false,
+                includeZero: true,
+                minimum: 0,
+                maximum: 200000,
+                interval: 50000,
                 labelFormatter: function (e: any) {
                     return e.value.toLocaleString() + " km";
                 }

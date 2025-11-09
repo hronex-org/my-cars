@@ -205,3 +205,107 @@
     color: #666;
     margin-top: 4px;
 }
+
+.registration-certificate {
+  margin-top: 8px;
+}
+
+.registration-thumb-button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 6px;
+}
+
+.registration-certificate-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  display: block;
+}
+
+/* Modal overlay */
+.registration-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+/* Modal content container */
+.registration-modal__content {
+  position: relative;
+  max-width: 95%;
+  max-height: 95%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Large image */
+.registration-modal__image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Close button */
+.registration-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.registration-pdfs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.pdf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #f7f7f8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.95rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pdf-link svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.pdf-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+  display: inline-block;
+  vertical-align: middle;
+}

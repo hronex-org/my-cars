@@ -16,15 +16,17 @@ export interface Service {
     attachments: ServiceAttachment[];
 }
 
-export interface Car {
-    id: number;
-    make: string;
-    model: string;
-    year: number;
-    imageUrl: string;
-    registrationNumber: string;
-    registrationExpiry: string;
-    vignetteExpiry: string;
-    carMileage: number;
-    services: Service[];
-}
+export type Car = {
+  id: number;
+  make: string;
+  model: string;
+  year: number;
+  imageUrl?: string;
+  registrationNumber?: string;
+  registrationExpiry?: string;
+  vignetteExpiry?: string;
+  carMileage?: number;
+  services?: Service[];
+  registrationCertificate?: string; // <-- new optional field for image URL/file
+  registrationPdfs?: Array<{ name: string; fileUrl: string }>;
+};
