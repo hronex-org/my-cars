@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../lib/supabase';
 
 interface Props {
   onLoginSuccess: () => void;

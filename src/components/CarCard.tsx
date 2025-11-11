@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Car, Service } from '../types/Car';
 import { MileageGraph } from './MileageGraph';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../lib/supabase';
 import './CarCard.css';
 
 interface CarCardProps {
@@ -11,7 +11,13 @@ interface CarCardProps {
 
 export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
     const [showServices, setShowServices] = useState(false);
-
+    // pick image from possible fields saved in DB / frontend shape
+    const imageSrc = (car as any).imageUrl ?? (car as any).image_url ?? (car as any).image ?? '/background.png';
+    const onImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.onerror = null;
+        e.currentTarget.src = '/background.png';
+    };
+    
     // editable current mileage state
     const [currentMileageState, setCurrentMileageState] = useState<number>(car.carMileage ?? 0);
     const [isEditingMileage, setIsEditingMileage] = useState(false);
@@ -111,7 +117,7 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
 
     return (
         <div className="car-card">
-            <img src={car.imageUrl} alt={`${car.make} ${car.model}`} className="car-image" />
+            <img src={imageSrc} onError={onImgError} alt={`${car.make} ${car.model}`} className="car-image" />
             <div className="car-info">
                 <h3>{car.make} {car.model} ({car.year})</h3>
 
