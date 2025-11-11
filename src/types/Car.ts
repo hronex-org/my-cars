@@ -1,5 +1,6 @@
 export interface ServiceItem {
     description: string;
+    quantity?: number;
     cost?: number;
 }
 

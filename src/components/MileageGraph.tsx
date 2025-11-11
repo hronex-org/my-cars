@@ -57,7 +57,7 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
                 title: "Kilometri",
                 includeZero: true,
                 minimum: 0,
-                maximum: 200000,
+                maximum: 300000,
                 interval: 50000,
                 labelFormatter: function (e: any) {
                     return e.value.toLocaleString() + " km";

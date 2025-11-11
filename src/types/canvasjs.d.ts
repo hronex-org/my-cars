@@ -31,6 +31,8 @@ declare module '@canvasjs/charts' {
         intervalType?: string;
         labelFormatter?: AxisLabelFormatter;
         includeZero?: boolean;
+        minimum?: number;
+        maximum?: number;
         suffix?: string;
     }
 

@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Car, Service } from '../types/Car';
 import { MileageGraph } from './MileageGraph';
+import { supabase } from '../supabaseClient';
 import './CarCard.css';
 
 interface CarCardProps {
     car: Car;
+    onMileageUpdate?: (carId: number, newMileage: number) => void;
 }
 
-export const CarCard = ({ car }: CarCardProps) => {
+export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
     const [showServices, setShowServices] = useState(false);
+
+    // editable current mileage state
+    const [currentMileageState, setCurrentMileageState] = useState<number>(car.carMileage ?? 0);
+    const [isEditingMileage, setIsEditingMileage] = useState(false);
+    const [editedMileage, setEditedMileage] = useState<string>(String(car.carMileage ?? 0));
+    const [isSaving, setIsSaving] = useState(false);
 
     // new state for modal
     const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+
+    // Sync with car prop changes
+    useEffect(() => {
+        setCurrentMileageState(car.carMileage ?? 0);
+        setEditedMileage(String(car.carMileage ?? 0));
+    }, [car.carMileage]);
 
     const parseDMY = (date?: string): Date | null => {
         if (!date) return null;
@@ -52,6 +66,7 @@ export const CarCard = ({ car }: CarCardProps) => {
     };
 
     const services = car.services ?? [];
+    
 
     // optional list of registration pdfs (e.g. [{ name: 'Registracija.pdf', fileUrl: '/path/to.pdf' }])
     const registrationPdfs = (car as any).registrationPdfs ?? [];
@@ -60,6 +75,32 @@ export const CarCard = ({ car }: CarCardProps) => {
         const dt = parseDMY(d);
         return dt ?? new Date(0);
     };
+
+    // helper to get last service (by date)
+    const getLastService = (): Service | null => {
+        if (!services || services.length === 0) return null;
+        const sorted = services.slice().sort((a, b) => parseServiceDate(b.date).getTime() - parseServiceDate(a.date).getTime());
+        return sorted[0] ?? null;
+    };
+
+    const lastService = getLastService();
+    const lastServiceDate = lastService ? parseServiceDate(lastService.date) : null;
+    const lastServiceMileage = lastService?.mileage ?? null;
+    const daysSinceLastService = lastServiceDate ? Math.ceil((new Date().getTime() - lastServiceDate.getTime()) / (1000 * 60 * 60 * 24)) : null;
+    const kmSinceLastService = lastServiceMileage !== null ? Math.max(0, currentMileageState - lastServiceMileage) : null;
+
+    // progress toward next service: based on the more-advanced of time (365 days) or distance (10000 km)
+    const serviceProgressPercent = (() => {
+        if (daysSinceLastService === null || kmSinceLastService === null) return 0;
+        const timeRatio = daysSinceLastService / 365;
+        const kmRatio = kmSinceLastService / 10000;
+        return Math.min(100, Math.max(timeRatio, kmRatio) * 100);
+    })();
+
+    const isServiceDue = (() => {
+        if (daysSinceLastService === null || kmSinceLastService === null) return false;
+        return daysSinceLastService >= 365 || kmSinceLastService >= 10000;
+    })();
 
     // handlers for registration modal
     const openRegModal = (e: React.MouseEvent) => {
@@ -79,6 +120,7 @@ export const CarCard = ({ car }: CarCardProps) => {
                     <div>{car.registrationNumber ?? 'N/A'}</div>
 
                     {/* Small clickable thumbnail */}
+                    <strong>Prometno dovoljenje:</strong>
                     {car.registrationCertificate && (
                         <div className="registration-certificate">
                             <button
@@ -155,8 +197,86 @@ export const CarCard = ({ car }: CarCardProps) => {
                 ) : (
                     <p>Vinjeta: N/A</p>
                 )}
+                {/* Current mileage display with edit option */}
+                <div className="mileage-display">
+                    <strong>Trenutni kilometri:</strong>
+                    {!isEditingMileage ? (
+                        <div className="mileage-value">
+                            <span>{currentMileageState.toLocaleString()} km</span>
+                            <button
+                                type="button"
+                                className="edit-mileage-btn"
+                                onClick={() => { setIsEditingMileage(true); setEditedMileage(String(currentMileageState)); }}
+                                aria-label="Uredi kilometre"
+                            >
+                                Uredi
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="mileage-edit">
+                            <input
+                                type="number"
+                                value={editedMileage}
+                                onChange={(e) => setEditedMileage(e.target.value)}
+                                className="mileage-input"
+                                min={0}
+                                aria-label="Novo stanje kilometrov"
+                            />
+                            <button
+                                type="button"
+                                className="save-mileage-btn"
+                                disabled={isSaving}
+                                onClick={async () => {
+                                    const parsed = parseInt(editedMileage.replace(/\D/g, ''), 10);
+                                    if (!isNaN(parsed)) {
+                                        setIsSaving(true);
+                                        try {
+                                            // Update in Supabase
+                                            const { error } = await supabase
+                                                .from('cars')
+                                                .update({ car_mileage: parsed, updated_at: new Date().toISOString() })
+                                                .eq('id', car.id);
 
-                <MileageGraph currentMileage={car.carMileage ?? 0} services={services} />
+                                            if (error) {
+                                                console.error('Error updating mileage:', error);
+                                                alert('Napaka pri shranjevanju kilometerov');
+                                            } else {
+                                                setCurrentMileageState(parsed);
+                                                if (onMileageUpdate) {
+                                                    onMileageUpdate(car.id, parsed);
+                                                }
+                                            }
+                                        } catch (e) {
+                                            console.error('Error saving mileage:', e);
+                                            alert('Napaka pri shranjevanju');
+                                        } finally {
+                                            setIsSaving(false);
+                                        }
+                                    }
+                                    setIsEditingMileage(false);
+                                }}
+                            >{isSaving ? 'Shranjujem...' : 'Shrani'}</button>
+                            <button type="button" className="cancel-mileage-btn" onClick={() => setIsEditingMileage(false)}>Prekliči</button>
+                        </div>
+                    )}
+                </div>
+
+                <MileageGraph currentMileage={currentMileageState} services={services} />
+
+                {/* Service due progress (based on last service date and km) */}
+                {lastServiceDate && (
+                    <div className="service-due">
+                        <strong>Naslednji servis</strong>
+                        <div className="progress-container">
+                            <div className={`progress-bar ${isServiceDue ? 'danger' : (serviceProgressPercent >= 70 ? 'warning' : 'good')}`} style={{ width: `${serviceProgressPercent}%` }} />
+                        </div>
+                        <p className="service-info">
+                            {daysSinceLastService !== null && <span>{daysSinceLastService} dni od zadnjega servisa</span>}
+                            {kmSinceLastService !== null && <span> • {kmSinceLastService.toLocaleString()} km od zadnjega servisa</span>}
+                        </p>
+                        {isServiceDue && <p className="service-due-warning">Servis potreben</p>}
+                    </div>
+                )}
                 
                 <button 
                     className="toggle-services"
@@ -196,6 +316,26 @@ export const CarCard = ({ car }: CarCardProps) => {
                                                 <span className="paid-value">{(service.paid ?? 0).toFixed(2)} €</span>
                                             </div>
                                         </div>
+                                        {/* Service attachments (e.g. PDFs) */}
+                                        {service.attachments && service.attachments.length > 0 && (
+                                            <div className="service-attachments" aria-label={`Priponke za servis ${service.date}`}>
+                                                {service.attachments.map((att, aIdx) => (
+                                                    <a
+                                                        key={aIdx}
+                                                        href={att.fileUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="pdf-link service-pdf-link"
+                                                        title={att.name}
+                                                    >
+                                                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                                            <path fill="currentColor" d="M6 2h7l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm7 1.5V8h4.5L13 3.5zM8 13h8v1H8v-1zm0-3h8v1H8v-1z"/>
+                                                        </svg>
+                                                        <span className="pdf-name">{att.name}</span>
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 );
                         })}

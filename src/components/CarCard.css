@@ -305,7 +305,68 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
+  max-width: 360px;
   display: inline-block;
   vertical-align: middle;
+}
+
+/* Mileage display and edit */
+.mileage-display {
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mileage-value {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.edit-mileage-btn,
+.save-mileage-btn,
+.cancel-mileage-btn {
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.cancel-mileage-btn {
+    background: #9e9e9e;
+}
+
+.mileage-edit {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.mileage-input {
+    width: 120px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Service due block */
+.service-due {
+    margin-top: 12px;
+    padding: 8px 0;
+}
+
+.service-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 6px;
+}
+
+.service-due-warning {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-top: 6px;
 }

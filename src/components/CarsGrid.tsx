@@ -5,14 +5,20 @@ import bmwImage from '../assets/bmw.png';
 import renaultEspaceImage from '../assets/renault-espace.jpg';
 import renaultGrandScenicImage from '../assets/renault-grand-scenic.jpg';
 
+// add car service PDF imports (put your files in assets/pdfs)
 import bmwServiceMay2025_1 from '../assets/pdfs/bmw-redni-servis-1-17-05-2025.pdf';
 import bmwServiceMay2025_2 from '../assets/pdfs/bmw-redni-servis-2-17-05-2025.pdf';
 import espaceServiceAug2021 from '../assets/pdfs/espace-redni-servis-17-08-2021.pdf';
 import espacePdf from '../assets/pdfs/espace-redni-servis-21-10-2024.pdf';
+import scenicBigServiceAug2024Pdf from '../assets/pdfs/scenic-veliki-redni-klima-servis-21-08-2024.pdf';
 
 // add registration certificate image import (put your file in assets/registrations)
+import bmwRegistrationImage from '../assets/bmw-registration.jpg';
 import espaceRegistrationImage from '../assets/espace-registration.png';
+import scenicRegistrationImage from '../assets/scenic-registration.jpg';
+import bmwReg2025Pdf from '../assets/registrations/bmw-registration-2025.pdf';
 import espaceReg2025Pdf from '../assets/registrations/espace-registration-2025.pdf';
+import scenicReg2025Pdf from '../assets/registrations/scenic-registration-2025.pdf';
 
 // Sample data - replace with your actual car data
 const cars: Car[] = [
@@ -24,8 +30,10 @@ const cars: Car[] = [
         imageUrl: bmwImage,
         registrationNumber: "LJ52-UVC",
         registrationExpiry: "18.07.2026",
-        registrationCertificate: "/registrations/bmw-registration.jpg",
-        registrationPdfs: [],
+        registrationCertificate: bmwRegistrationImage,
+        registrationPdfs: [
+            { name: "Registracija in zavarovanje BMW 2025/26", fileUrl: bmwReg2025Pdf },
+        ],
         vignetteExpiry: "19.04.2026",
         carMileage: 130000,
         services: [
@@ -70,31 +78,14 @@ const cars: Car[] = [
         year: 2016,
         imageUrl: renaultEspaceImage,
         registrationNumber: "LJ57-ZIJ",
-        registrationCertificate: espaceRegistrationImage, // <-- added,
+        registrationCertificate: espaceRegistrationImage,
         registrationPdfs: [
-            { name: "Registracija - Espace.pdf", fileUrl: espaceReg2025Pdf },
+            { name: "Registracija in zavarovanje ESPACE 2025/26", fileUrl: espaceReg2025Pdf },
         ],
         registrationExpiry: "11.11.2026",
         vignetteExpiry: "06.11.2026",
         carMileage: 137000,
         services: [
-            {
-                date: "06.11.2025",
-                mileage: 138841,
-                items: [
-                    {
-                        description: "Potrdilo o tehničnem pregledu vozila",
-                        cost: 38.28
-                    }
-                ],
-                paid: 388.14,
-                attachments: [
-                    {
-                        name: "Račun.pdf",
-                        fileUrl: espacePdf
-                    }
-                ]
-            },
             {
                 date: "21.10.2024",
                 mileage: 126459,
@@ -238,21 +229,98 @@ const cars: Car[] = [
         year: 2014,
         imageUrl: renaultGrandScenicImage,
         registrationNumber: "LJ87-AAP",
+        registrationCertificate: scenicRegistrationImage,
+        registrationPdfs: [
+            { name: "Registracija in zavarovanje SCENIC 2025/26", fileUrl: scenicReg2025Pdf },
+        ],
         registrationExpiry: "28.11.2025",
         vignetteExpiry: "14.05.2026",
         carMileage: 290000,
         services: [
             {
-                date: "20.04.2023",
-                mileage: 60000,
+                date: "21.08.2024",
+                mileage: 281176,
                 items: [
                     {
-                        description: "Menjava pnevmatik",
-                        cost: 100
-                    }
+                        description: "Servis pregled vozilo",
+                        cost: 104.13
+                    },
+                    {
+                        description: "Odstr - pon nam zračni filter",
+                        cost: 16.02
+                    },
+                    {
+                        description: "Zamenjava filter potniškega prostora",
+                        cost: 24.03
+                    },
+                    {
+                        description: "Mazanje bat sprednjega zavornega sedla",
+                        cost: 32.04
+                    },
+                    {
+                        description: "Zamenjava zadnja zavorna ploščica",
+                        cost: 80.10
+                    },
+                    {
+                        description: "Mazanje sklop zdanjega zavornega sedla",
+                        cost: 32.04
+                    },
+                    {
+                        description: "Konfiguaracija ročne zavore",
+                        cost: 32.04
+                    },
+                    {
+                        description: "Odstr - pon nam vodna črpalka",
+                        cost: 40.05
+                    },
+                    {
+                        description: "Zamenjava enota predgretja in postgretja",
+                        cost: 240.30
+                    },
+                    {
+                        description: "Zamenjava jermen za pogon opreme motorja",
+                        cost: 48.06
+                    },
+                    {
+                        description: "Pra izp pol odz krogotok hladilne tekočine - odzračevan",
+                        cost: 136.17
+                    },
+                    {
+                        description: "Odstr - pon nam kompresor klimatske naprave",
+                        cost: 200.25
+                    },
+                    {
+                        description: "Odstr - pon nam kondenzator",
+                        cost: 88.11
+                    },
+                    {
+                        description: "Čiščenje odduščkov požarne stene",
+                        cost: 80.10
+                    },
+                    {
+                        description: "Prazn - polnjenje olje za menjalnik",
+                        cost: 48.06
+                    },
+                    {
+                        description: "Zamenjava zavorna tekočina",
+                        cost: 48.06
+                    },
+                    {
+                        description: "Grt. tesnil klime",
+                        cost: 40.26
+                    },
+                    {
+                        description: "Glaceol - Antifriz 1L",
+                        cost: 32.31
+                    },
                 ],
-                paid: 388.14,
-                attachments: []
+                paid: 2275.62,
+                attachments: [
+                    {
+                        name: "Veliki, redni in servis klime.pdf",
+                        fileUrl: scenicBigServiceAug2024Pdf
+                    }
+                ]
             }
         ]
     }
