@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Car } from '../types/Car';
 import { CarCard } from './CarCard';
 import './CarsGrid.css';
 import { supabase } from '../lib/supabase';
+import { ParkingGrid } from './ParkingGrid';
 
 export const CarsGrid = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -51,6 +52,8 @@ export const CarsGrid = () => {
         // adapt backend shape to frontend expected names if needed
         const normalized: Car[] = (data || []).map((c: any) => ({
           ...c,
+          // ensure car_logo is included (already in * but explicit mapping helps)
+          carLogo: c.car_logo,
           // map db registration_pdfs.file_url -> registrationPdfs[].fileUrl expected in UI
           registrationPdfs: (c.registration_pdfs || []).map((p: any) => ({ name: p.name, fileUrl: p.file_url })),
           // map nested services items/attachments names to UI shape
@@ -85,10 +88,15 @@ export const CarsGrid = () => {
   if (cars.length === 0) return <div className="cars-grid-empty">No cars found.</div>;
 
   return (
-    <div className="cars-grid">
-      {cars.map((car) => (
-        <CarCard key={car.id} car={car} />
-      ))}
-    </div>
+    <>
+      <div className="cars-grid">
+        {cars.map((car) => (
+          <CarCard key={car.id} car={car} />
+        ))}
+      </div>
+
+      {/* Parking grid added at bottom */}
+      <ParkingGrid cars={cars} />
+    </>
   );
 };

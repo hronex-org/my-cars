@@ -1,0 +1,146 @@
+.parking-container {
+  border-top: 1px solid #e6e6e9;
+  padding: 12px;
+  background: #fafafa;
+  margin-top: 18px;
+}
+
+.parking-top {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cars-list { flex: 1; }
+.cars-list-title { font-weight: 600; margin-bottom: 8px; }
+.cars-list-items { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.car-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid transparent;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.car-select.selected { border-color: #2a6ef2; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.993); }
+.car-select img { width: 56px; height: 40px; object-fit: cover; border-radius: 6px; margin-bottom: 6px; }
+.car-label { font-size: 12px; text-align: center; }
+
+.parking-key { font-size: 13px; color: #333; }
+
+.parking-grid { display: flex; gap: 16px; align-items: flex-start; }
+
+/* side columns */
+.parking-side { width: 33%; }
+.side-title { font-weight: 600; margin-bottom: 8px; }
+.slots { display: flex; flex-direction: column; gap: 8px; }
+.front-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+/* slot */
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e6e6e9;
+  cursor: pointer;
+  min-height: 48px;
+}
+.slot:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.slot-id { font-weight: 600; width: 36px; text-align: center; font-size: 13px; color: #666; }
+.slot-thumb { width: 48px; height: 36px; object-fit: cover; border-radius: 6px; }
+	slot-empty { color: #aaa; font-size: 18px; }
+
+.parking-map-wrapper { margin-top: 18px; }
+.parking-top { margin-bottom: 8px; display:flex; align-items:center; gap:12px; }
+
+/* The map container - use your photo placed at public/parking-map.png */
+.parking-map {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  aspect-ratio: 16/9; /* adjust to your image ratio or set height */
+  background-color: darkgray;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  border: 1px solid #e6e6e9;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  overflow: visible;
+}
+
+/* slot button positioned absolutely on the map */
+.map-slot-vertical {
+  position: absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:6px;
+  width: 28px;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+  user-select: none;
+}
+.map-slot-horizontal {
+  position: absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:6px;
+  width: 54px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+  user-select: none;
+}
+.map-slot:hover { transform: translate(-50%, -50%) scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+.map-slot.occupied { background: rgba(42,110,242,0.08); border-color: rgba(42,110,242,0.25); }
+.map-slot.highlight { box-shadow: 0 0 0 3px rgba(42,110,242,0.12); }
+
+.slot-badge { font-weight:700; font-size:12px; color:#222; }
+.slot-thumb { width:36px; height:28px; object-fit:cover; border-radius:4px; }
+
+/* small car selector list styles (reuse or adjust) */
+.cars-list-items { display:flex; gap:8px; flex-wrap:wrap; }
+.car-select { display:flex; flex-direction:column; align-items:center; width:84px; padding:6px; border-radius:8px; background:#fff; border:1px solid transparent; }
+.car-select.selected { border-color:#2a6ef2; box-shadow:0 2px 8px rgba(42,110,242,0.12); }
+.car-select img { width:56px; height:40px; object-fit:contain; border-radius:6px; margin-bottom:6px; }
+.car-label { font-size:12px; text-align:center; }
+.car-parked { font-size:11px; color:#666; margin-top:4px; }
+
+/* logos */
+public/
+  logos/
+    bmw.png
+    renault.png
+
+/* adjust car selector image to show logo */
+.car-select img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+/* slot logo */
+.slot-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+}
