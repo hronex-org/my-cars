@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Car, Service } from '../types/Car';
 import { MileageGraph } from './MileageGraph';
 import { supabase } from '../lib/supabase';
+import { formatDate } from '../utils/dateFormat';
 import './CarCard.css';
 
 interface CarCardProps {
@@ -19,9 +20,9 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
     };
     
     // editable current mileage state
-    const [currentMileageState, setCurrentMileageState] = useState<number>(car.carMileage ?? 0);
+    const [currentMileageState, setCurrentMileageState] = useState<number>(car.currentMileage ?? 0);
     const [isEditingMileage, setIsEditingMileage] = useState(false);
-    const [editedMileage, setEditedMileage] = useState<string>(String(car.carMileage ?? 0));
+    const [editedMileage, setEditedMileage] = useState<string>(String(car.currentMileage ?? 0));
     const [isSaving, setIsSaving] = useState(false);
 
     // new state for modal
@@ -29,9 +30,9 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
 
     // Sync with car prop changes
     useEffect(() => {
-        setCurrentMileageState(car.carMileage ?? 0);
-        setEditedMileage(String(car.carMileage ?? 0));
-    }, [car.carMileage]);
+        setCurrentMileageState(car.currentMileage ?? 0);
+        setEditedMileage(String(car.currentMileage ?? 0));
+    }, [car.currentMileage]);
 
     const parseDMY = (date?: string): Date | null => {
         if (!date) return null;
@@ -73,8 +74,12 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
 
     const services = car.services ?? [];
     
+    // Calculate vignette values once
+    const vignetteExpiryFormatted = car.vignetteExpiry ? formatDate(car.vignetteExpiry) : null;
+    const daysUntilVignette = vignetteExpiryFormatted ? getDaysUntilExpiry(vignetteExpiryFormatted) : null;
+    const isVignetteClose = vignetteExpiryFormatted ? isExpiryClose(vignetteExpiryFormatted) : false;
 
-    // optional list of registration pdfs (e.g. [{ name: 'Registracija.pdf', fileUrl: '/path/to.pdf' }])
+    // optional list of registration pdfs
     const registrationPdfs = (car as any).registrationPdfs ?? [];
 
     const parseServiceDate = (d?: string) => {
@@ -120,15 +125,14 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
             <img src={imageSrc} onError={onImgError} alt={`${car.make} ${car.model}`} className="car-image" />
             <div className="car-info">
                 <h3>{car.make} {car.model} ({car.year})</h3>
-
                 <div className="registration-info">
                     <strong>Registrske tablice:</strong>
                     <div>{car.registrationNumber ?? 'N/A'}</div>
 
                     {/* Small clickable thumbnail */}
                     <strong>Prometno dovoljenje:</strong>
-                    {car.registrationCertificate && (
-                        <div className="registration-certificate">
+                    {car.trafficPermit && (
+                        <div className="traffic-permit">
                             <button
                                 type="button"
                                 className="registration-thumb-button"
@@ -136,9 +140,9 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                                 aria-label={`Odpri potrdilo o registraciji za ${car.make} ${car.model}`}
                             >
                                 <img
-                                    src={car.registrationCertificate}
+                                    src={car.trafficPermit}
                                     alt={`Potrdilo o registraciji ${car.make} ${car.model}`}
-                                    className="registration-certificate-thumb"
+                                    className="traffic-permit-thumb"
                                 />
                             </button>
                         </div>
@@ -182,26 +186,47 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                         )}
                     </>
                 ) : (
-                    <p>Registracija: N/A</p>
+                    <>
+                        {/* Show registration PDFs even if expiry is missing */}
+                        {registrationPdfs.length > 0 && (
+                            <div className="registration-pdfs" aria-label="Registracijski PDFji">
+                                {registrationPdfs.map((pdf: any, idx: number) => (
+                                    <a
+                                        key={idx}
+                                        href={pdf.fileUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="pdf-link"
+                                        title={pdf.name}
+                                    >
+                                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                            <path fill="currentColor" d="M6 2h7l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm7 1.5V8h4.5L13 3.5zM8 13h8v1H8v-1zm0-3h8v1H8v-1z"/>
+                                        </svg>
+                                        <span className="pdf-name">{pdf.name}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
+                    </>
                 )}
 
-                {car.vignetteExpiry ? (
+                {vignetteExpiryFormatted ? (
                     <>
-                        <p className={isExpiryClose(car.vignetteExpiry) ? 'expiry-warning' : ''}>
-                            Vinjeta poteče: {car.vignetteExpiry}
+                        <p className={isVignetteClose ? 'expiry-warning' : ''}>
+                            Vinjeta poteče: {vignetteExpiryFormatted}
                         </p>
                         <div className="progress-container">
                             <div
-                                style={{ width: getProgressBarStyle(getDaysUntilExpiry(car.vignetteExpiry)).width }}
-                                className={getProgressBarStyle(getDaysUntilExpiry(car.vignetteExpiry)).className}
+                                style={{ width: getProgressBarStyle(daysUntilVignette).width }}
+                                className={getProgressBarStyle(daysUntilVignette).className}
                             />
                         </div>
                         <p className="days-left">
-                            {getDaysUntilExpiry(car.vignetteExpiry) ?? 'N/A'} dni do poteka vinjete
+                            {daysUntilVignette ?? 'N/A'} dni do poteka vinjete
                         </p>
                     </>
                 ) : (
-                    <p>Vinjeta: N/A</p>
+                    <p className="vignette">Vinjeta: N/A</p>
                 )}
                 {/* Current mileage display with edit option */}
                 <div className="mileage-display">
@@ -240,7 +265,7 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                                             // Update in Supabase
                                             const { error } = await supabase
                                                 .from('cars')
-                                                .update({ car_mileage: parsed, updated_at: new Date().toISOString() })
+                                                .update({ current_mileage: parsed, updated_at: new Date().toISOString() })
                                                 .eq('id', car.id);
 
                                             if (error) {
@@ -350,7 +375,7 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
             </div>
 
             {/* Modal for large image */}
-            {isRegModalOpen && car.registrationCertificate && (
+            {isRegModalOpen && car.trafficPermit && (
                 <div
                     className="registration-modal"
                     role="dialog"
@@ -360,7 +385,7 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                     <div className="registration-modal__content" onClick={(e) => e.stopPropagation()}>
                         <button className="registration-modal__close" onClick={closeRegModal} aria-label="Zapri">×</button>
                         <img
-                            src={car.registrationCertificate}
+                            src={car.trafficPermit}
                             alt={`Potrdilo o registraciji ${car.make} ${car.model}`}
                             className="registration-modal__image"
                         />

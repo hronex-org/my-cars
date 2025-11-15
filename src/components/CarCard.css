@@ -1,29 +1,81 @@
 .car-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: rgb(233, 232, 232);
-    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.car-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .car-image {
-    width: 100%;        /* Takes full width of its container */
-    height: 300px;      /* Fixed height - adjust this value as needed */
-    object-position: center; /* Centers the image */
-    border-radius: 4px;
-    margin-bottom: 16px;
-    background-color: #f5f5f5; /* Light background for when image doesn't fill space */
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
 }
 
 .car-info {
-    margin: 0 0px 0px 0;
+    padding-left: 2%;
+    padding-right: 2%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.car-info h2 {
-    margin: 0 0 16px 0;
-    color: #333;
+.car-info h3{
+    margin-top: 1%;
+}
+
+.registration-info,
+.registration,
+.vignette {
+    margin-top: 1%;
+}
+
+.car-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.car-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.car-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.car-detail-label {
+    font-weight: 500;
+    color: #444;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .car-image {
+        height: 180px;
+    }
+
+    .car-title {
+        font-size: 16px;
+    }
+
+    .car-details {
+        font-size: 13px;
+    }
 }
 
 .expiry-warning {
@@ -206,7 +258,7 @@
     margin-top: 4px;
 }
 
-.registration-certificate {
+.traffic-permit {
   margin-top: 8px;
 }
 
@@ -219,7 +271,7 @@
   border-radius: 6px;
 }
 
-.registration-certificate-thumb {
+.traffic-permit-thumb {
   width: 48px;
   height: 48px;
   object-fit: cover;

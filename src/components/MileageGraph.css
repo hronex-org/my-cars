@@ -4,6 +4,9 @@
     background-color: #338b9b;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mileage-graph h4 {
@@ -112,4 +115,14 @@
 
 .mileage-point:hover .point-label {
     opacity: 1;
+}
+
+.mileage-graph > div {
+    min-width: 600px;
+}
+
+@media (max-width: 768px) {
+    .mileage-graph > div {
+        min-width: 500px;
+    }
 }

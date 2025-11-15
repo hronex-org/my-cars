@@ -44,7 +44,8 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
             animationEnabled: true,
             theme: "light2",
             title: {
-                text: "Zgodovina prevoženih kilometrov"
+                text: "Zgodovina prevoženih kilometrov",
+                fontSize: 16
             },
             axisX: {
                 title: "Datum",
@@ -65,7 +66,7 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
             },
             data: [{
                 type: "line",
-                indexLabelFontSize: 16,
+                indexLabelFontSize: 12,
                 dataPoints: points,
                 markerSize: 8,
                 markerType: "circle"
@@ -86,7 +87,7 @@ export const MileageGraph = ({ currentMileage, services }: MileageGraphProps) =>
 
     return (
         <div className="mileage-graph">
-            <div id={chartContainerId} style={{ height: "370px", width: "100%" }} />
+            <div id={chartContainerId} style={{ height: "300px", width: "100%", minWidth: "600px" }} />
         </div>
     );
 };

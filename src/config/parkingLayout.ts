@@ -1,5 +1,8 @@
 export const parkingLayout = {
   // each slot has an id and position (percentages relative to the map image)
+  building: [
+    { id: 'Zgrada', x: 33,  y: 47, label: 'Building 1', orientation: 'central' },
+  ],
   left: [
     { id: 'L19', x: 18,  y: 4, label: 'Leva 19', orientation: 'vertical' },
     { id: 'L18', x: 20,  y: 4, label: 'Leva 18', orientation: 'vertical' },
@@ -195,7 +198,7 @@ export const parkingLayout = {
 
   // helper to get all slots in visual order
   allSlots() {
-    return [...this.left, ...this.front, ...this.right];
+    return [...this.building, ...this.left, ...this.front, ...this.right];
   },
 
   // quick label lookup

@@ -5,130 +5,58 @@
   margin-top: 18px;
 }
 
-.parking-top {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 12px;
+.parking-map-wrapper {
+  margin-top: 18px;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.cars-list { flex: 1; }
-.cars-list-title { font-weight: 600; margin-bottom: 8px; }
-.cars-list-items { display: flex; gap: 8px; flex-wrap: wrap; }
+.parking-top {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+.cars-list {
+  width: 100%;
+}
+
+.cars-list-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.cars-list-items {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
 
 .car-select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px;
-  border: 1px solid transparent;
+  min-width: 80px;
+  padding: 8px;
+  border: 2px solid transparent;
   background: #fff;
   border-radius: 8px;
   cursor: pointer;
-}
-.car-select.selected { border-color: #2a6ef2; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.993); }
-.car-select img { width: 56px; height: 40px; object-fit: cover; border-radius: 6px; margin-bottom: 6px; }
-.car-label { font-size: 12px; text-align: center; }
-
-.parking-key { font-size: 13px; color: #333; }
-
-.parking-grid { display: flex; gap: 16px; align-items: flex-start; }
-
-/* side columns */
-.parking-side { width: 33%; }
-.side-title { font-weight: 600; margin-bottom: 8px; }
-.slots { display: flex; flex-direction: column; gap: 8px; }
-.front-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-
-/* slot */
-.slot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid #e6e6e9;
-  cursor: pointer;
-  min-height: 48px;
-}
-.slot:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
-.slot-id { font-weight: 600; width: 36px; text-align: center; font-size: 13px; color: #666; }
-.slot-thumb { width: 48px; height: 36px; object-fit: cover; border-radius: 6px; }
-	slot-empty { color: #aaa; font-size: 18px; }
-
-.parking-map-wrapper { margin-top: 18px; }
-.parking-top { margin-bottom: 8px; display:flex; align-items:center; gap:12px; }
-
-/* The map container - use your photo placed at public/parking-map.png */
-.parking-map {
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
-  aspect-ratio: 16/9; /* adjust to your image ratio or set height */
-  background-color: darkgray;
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-  border: 1px solid #e6e6e9;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  overflow: visible;
+  flex-shrink: 0;
 }
 
-/* slot button positioned absolutely on the map */
-.map-slot-vertical {
-  position: absolute;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:6px;
-  width: 28px;
-  height: 48px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.95);
-  border: 1px solid rgba(0,0,0,0.08);
-  cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease;
-  user-select: none;
+.car-select.selected {
+  border-color: #2a6ef2;
+  box-shadow: 0 2px 8px rgba(42, 110, 242, 0.3);
 }
-.map-slot-horizontal {
-  position: absolute;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:6px;
-  width: 54px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.95);
-  border: 1px solid rgba(0,0,0,0.08);
-  cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease;
-  user-select: none;
-}
-.map-slot:hover { transform: translate(-50%, -50%) scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-.map-slot.occupied { background: rgba(42,110,242,0.08); border-color: rgba(42,110,242,0.25); }
-.map-slot.highlight { box-shadow: 0 0 0 3px rgba(42,110,242,0.12); }
 
-.slot-badge { font-weight:700; font-size:12px; color:#222; }
-.slot-thumb { width:36px; height:28px; object-fit:cover; border-radius:4px; }
-
-/* small car selector list styles (reuse or adjust) */
-.cars-list-items { display:flex; gap:8px; flex-wrap:wrap; }
-.car-select { display:flex; flex-direction:column; align-items:center; width:84px; padding:6px; border-radius:8px; background:#fff; border:1px solid transparent; }
-.car-select.selected { border-color:#2a6ef2; box-shadow:0 2px 8px rgba(42,110,242,0.12); }
-.car-select img { width:56px; height:40px; object-fit:contain; border-radius:6px; margin-bottom:6px; }
-.car-label { font-size:12px; text-align:center; }
-.car-parked { font-size:11px; color:#666; margin-top:4px; }
-
-/* logos */
-public/
-  logos/
-    bmw.png
-    renault.png
-
-/* adjust car selector image to show logo */
 .car-select img {
   width: 48px;
   height: 48px;
@@ -137,10 +65,142 @@ public/
   margin-bottom: 6px;
 }
 
-/* slot logo */
-.slot-logo {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+.car-label {
+  font-size: 11px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.car-parked {
+  font-size: 10px;
+  color: #666;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Parking map container - crop to 55% width to eliminate right space */
+.parking-map {
+  position: relative;
+  min-width: 650px;
+  width: 650px;
+  height: 800px;
+  background-image: url('/parking-map.png');
+  background-size: auto 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  border: 1px solid #e6e6e9;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Slot buttons */
+.map-slot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px;
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  user-select: none;
+}
+
+.map-slot-horizontal {
+  width: 20px;
+  height: 16px;
+  font-size: 7px;
+}
+
+.map-slot-vertical {
+  width: 16px;
+  height: 20px;
+  flex-direction: column;
+  font-size: 7px;
+}
+
+.map-slot-central {
+  width: 60px;
+  height: 450px;
+  flex-direction: column;
+  font-size: 7px;
+  background-color: rgb(88, 95, 88);
+  pointer-events: none;
+}
+
+.map-slot:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.map-slot.occupied {
+  background: rgba(42, 110, 242, 0.2);
+  border-color: rgba(42, 110, 242, 0.5);
+}
+
+.map-slot.highlight {
+  box-shadow: 0 0 0 2px rgba(42, 110, 242, 0.4);
+  z-index: 11;
+}
+
+.slot-badge {
+  font-weight: 700;
+  font-size: 6px;
+  color: #222;
+  line-height: 1;
+}
+
+.slot-logo {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .parking-map-wrapper {
+    padding: 0;
+  }
+
+  .parking-top {
+    padding: 0 8px;
+  }
+
+  .parking-map {
+    min-width: 1200px;
+    width: 1200px;
+    height: 1400px;
+  }
+
+  .map-slot-horizontal {
+    width: 32px;
+    height: 24px;
+    font-size: 9px;
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .map-slot-vertical {
+    width: 24px;
+    height: 32px;
+    font-size: 9px;
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .slot-badge {
+    font-size: 8px;
+  }
+
+  .slot-logo {
+    width: 20px;
+    height: 20px;
+  }
 }

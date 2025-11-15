@@ -9,6 +9,7 @@ export const CarsGrid = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showParkingGrid, setShowParkingGrid] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -18,15 +19,12 @@ export const CarsGrid = () => {
       setError(null);
 
       try {
-        // get current user
-        const {
-          data: { user },
-          error: userErr
-        } = await supabase.auth.getUser();
+        // Get current user
+        const { data: { user }, error: userErr } = await supabase.auth.getUser();
 
         if (userErr) throw userErr;
         if (!user) {
-          setCars([]);
+          setError('Not authenticated');
           return;
         }
 
@@ -49,14 +47,14 @@ export const CarsGrid = () => {
         if (fetchError) throw fetchError;
         if (!mounted) return;
 
-        // adapt backend shape to frontend expected names if needed
         const normalized: Car[] = (data || []).map((c: any) => ({
           ...c,
-          // ensure car_logo is included (already in * but explicit mapping helps)
           carLogo: c.car_logo,
-          // map db registration_pdfs.file_url -> registrationPdfs[].fileUrl expected in UI
+          registrationNumber: c.registration_number,
+          trafficPermit: c.traffic_permit,
+          vignetteExpiry: c.vignette_expiry,
+          currentMileage: c.current_mileage,
           registrationPdfs: (c.registration_pdfs || []).map((p: any) => ({ name: p.name, fileUrl: p.file_url })),
-          // map nested services items/attachments names to UI shape
           services: (c.services || []).map((s: any) => ({
             id: s.id,
             date: s.date,
@@ -94,9 +92,13 @@ export const CarsGrid = () => {
           <CarCard key={car.id} car={car} />
         ))}
       </div>
-
-      {/* Parking grid added at bottom */}
-      <ParkingGrid cars={cars} />
+      <button style={{marginLeft: '10px'}}
+                    className="toggle-services"
+                    onClick={() => setShowParkingGrid(!showParkingGrid)}
+                >
+                    {showParkingGrid ? 'Skrij parkirišče' : 'Pokaži parkirišče'}
+                </button>
+      {showParkingGrid && (<ParkingGrid cars={cars} />)}
     </>
   );
 };

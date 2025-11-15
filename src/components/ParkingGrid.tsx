@@ -123,7 +123,7 @@ export const ParkingGrid: React.FC<ParkingGridProps> = ({ cars, onParkingChange 
         {parkingLayout.allSlots().map(slot => {
           const carId = slots[slot.id];
           const car = findCar(carId);
-          const orientationClass = slot.orientation === 'vertical' ? 'map-slot-vertical' : 'map-slot-horizontal';
+          const orientationClass = slot.orientation === 'vertical' ? 'map-slot-vertical' : slot.orientation === 'horizontal' ? 'map-slot-horizontal' : 'map-slot-central';
           const logo = getBrandLogo(car);
           return (
             <button

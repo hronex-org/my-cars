@@ -40,6 +40,7 @@ declare module '@canvasjs/charts' {
         theme?: string;
         title?: {
             text: string;
+            fontSize?: number;
         };
         animationEnabled?: boolean;
         axisX?: ChartAxis;

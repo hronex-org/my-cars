@@ -25,9 +25,9 @@ export type Car = {
   imageUrl?: string;
   registrationNumber?: string;
   registrationExpiry?: string;
+  trafficPermit?: string;
   vignetteExpiry?: string;
-  carMileage?: number;
+  currentMileage: number;
   services?: Service[];
-  registrationCertificate?: string; // <-- new optional field for image URL/file
   registrationPdfs?: Array<{ name: string; fileUrl: string }>;
 };
