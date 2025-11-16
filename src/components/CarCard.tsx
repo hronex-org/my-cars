@@ -76,11 +76,12 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
     
     // Calculate vignette values once
     const vignetteExpiryFormatted = car.vignetteExpiry ? formatDate(car.vignetteExpiry) : null;
+    const registrationExpiryFormatted = car.registrationExpiry ? formatDate(car.registrationExpiry) : null;
     const daysUntilVignette = vignetteExpiryFormatted ? getDaysUntilExpiry(vignetteExpiryFormatted) : null;
     const isVignetteClose = vignetteExpiryFormatted ? isExpiryClose(vignetteExpiryFormatted) : false;
 
     // optional list of registration pdfs
-    const registrationPdfs = (car as any).registrationPdfs ?? [];
+    const registrationPdfs = car.registrationPdfs ?? [];
 
     const parseServiceDate = (d?: string) => {
         const dt = parseDMY(d);
@@ -95,7 +96,7 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
     };
 
     const lastService = getLastService();
-    const lastServiceDate = lastService ? parseServiceDate(lastService.date) : null;
+    const lastServiceDate = lastService ? parseServiceDate(formatDate(lastService.date)) : null;
     const lastServiceMileage = lastService?.mileage ?? null;
     const daysSinceLastService = lastServiceDate ? Math.ceil((new Date().getTime() - lastServiceDate.getTime()) / (1000 * 60 * 60 * 24)) : null;
     const kmSinceLastService = lastServiceMileage !== null ? Math.max(0, currentMileageState - lastServiceMileage) : null;
@@ -148,20 +149,20 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                         </div>
                     )}
                 </div>
-
-                {car.registrationExpiry ? (
+                <strong>Registracija:</strong>
+                {registrationExpiryFormatted ? (
                     <>
-                        <p className={isExpiryClose(car.registrationExpiry) ? 'expiry-warning' : ''}>
-                            Registracija poteče: {car.registrationExpiry}
+                        <p className={isExpiryClose(registrationExpiryFormatted) ? 'expiry-warning' : ''}>
+                            Registracija poteče: {registrationExpiryFormatted}
                         </p>
                         <div className="progress-container">
                             <div
-                                style={{ width: getProgressBarStyle(getDaysUntilExpiry(car.registrationExpiry)).width }}
-                                className={getProgressBarStyle(getDaysUntilExpiry(car.registrationExpiry)).className}
+                                style={{ width: getProgressBarStyle(getDaysUntilExpiry(registrationExpiryFormatted)).width }}
+                                className={getProgressBarStyle(getDaysUntilExpiry(registrationExpiryFormatted)).className}
                             />
                         </div>
                         <p className="days-left">
-                            {getDaysUntilExpiry(car.registrationExpiry) ?? 'N/A'} dni do poteka registracije
+                            {getDaysUntilExpiry(registrationExpiryFormatted) ?? 'N/A'} dni do poteka registracije
                         </p>
 
                         {/* Inline list of registration PDF files */}
@@ -322,11 +323,12 @@ export const CarCard = ({ car, onMileageUpdate }: CarCardProps) => {
                             .slice()
                             .sort((a, b) => parseServiceDate(b.date).getTime() - parseServiceDate(a.date).getTime())
                             .map((service: Service, index: number) => {
+                                console.log('Rendering service.attachments:', service.attachments);
                                 const totalCost = (service.items || []).reduce((sum, item) => sum + (item.cost ?? 0), 0);
                                 return (
                                     <div key={index} className="service-item">
                                         <div className="service-header">
-                                            <h4>Datum: {service.date}</h4>
+                                            <h4>Datum: {formatDate(service.date)}</h4>
                                             <p>Kilometri: {(service.mileage ?? 0).toLocaleString()} km</p>
                                         </div>
                                         <div className="service-details">

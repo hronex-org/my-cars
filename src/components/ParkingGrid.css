@@ -7,7 +7,8 @@
 
 .parking-map-wrapper {
   margin-top: 18px;
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -18,6 +19,8 @@
   flex-direction: column;
   gap: 12px;
   padding: 0 12px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .cars-list {
@@ -78,21 +81,20 @@
   text-align: center;
 }
 
-/* Parking map container - crop to 55% width to eliminate right space */
+/* Parking map container - full viewport width on desktop */
 .parking-map {
   position: relative;
-  min-width: 650px;
-  width: 650px;
+  width: 100%;
+  max-width: 1400px;
   height: 800px;
   background-image: url('/parking-map.png');
-  background-size: auto 100%;
-  background-position: left center;
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
   border-radius: 8px;
   border: 1px solid #e6e6e9;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   margin: 0 auto;
-  overflow: hidden;
 }
 
 /* Slot buttons */
@@ -112,23 +114,23 @@
 }
 
 .map-slot-horizontal {
-  width: 20px;
-  height: 16px;
-  font-size: 7px;
+  width: 24px;
+  height: 18px;
+  font-size: 8px;
 }
 
 .map-slot-vertical {
-  width: 16px;
-  height: 20px;
+  width: 18px;
+  height: 24px;
   flex-direction: column;
-  font-size: 7px;
+  font-size: 8px;
 }
 
 .map-slot-central {
-  width: 60px;
+  width: 80px;
   height: 450px;
   flex-direction: column;
-  font-size: 7px;
+  font-size: 8px;
   background-color: rgb(88, 95, 88);
   pointer-events: none;
 }
@@ -151,32 +153,36 @@
 
 .slot-badge {
   font-weight: 700;
-  font-size: 6px;
+  font-size: 7px;
   color: #222;
   line-height: 1;
 }
 
 .slot-logo {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   object-fit: contain;
   border-radius: 2px;
 }
 
-/* Mobile specific adjustments */
+/* Mobile specific adjustments - larger fixed-width map with horizontal scroll */
 @media (max-width: 768px) {
   .parking-map-wrapper {
     padding: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 
   .parking-top {
     padding: 0 8px;
+    max-width: 100%;
   }
 
   .parking-map {
     min-width: 1200px;
     width: 1200px;
-    height: 1400px;
+    height: 1000px;
+    max-width: none;
   }
 
   .map-slot-horizontal {
@@ -193,6 +199,11 @@
     font-size: 9px;
     gap: 3px;
     padding: 3px;
+  }
+
+  .map-slot-central {
+    width: 100px;
+    height: 600px;
   }
 
   .slot-badge {

@@ -9,7 +9,6 @@ export const CarsGrid = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showParkingGrid, setShowParkingGrid] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -30,39 +29,117 @@ export const CarsGrid = () => {
 
         const userId = user.id;
 
-        const { data, error: fetchError } = await supabase
+        // Fetch cars
+        const { data: carsData, error: carsError } = await supabase
           .from('cars')
-          .select(`
-            *,
-            registration_pdfs ( id, name, file_url ),
-            services (
-              id, date, mileage, paid,
-              service_items ( id, description, cost ),
-              attachments ( id, name, file_url )
-            )
-          `)
+          .select('*')
           .eq('user_id', userId)
           .order('id', { ascending: true });
 
-        if (fetchError) throw fetchError;
+        if (carsError) throw carsError;
+
+        // Fetch services for all cars
+        const { data: servicesData, error: servicesError } = await supabase
+          .from('services')
+          .select(`
+            id,
+            car_id,
+            date,
+            mileage,
+            paid
+          `)
+          .in('car_id', carsData?.map(c => c.id) || [])
+          .order('date', { ascending: false });
+
+        if (servicesError) throw servicesError;
+
+        // Fetch service items for all services
+        const { data: serviceItemsData, error: itemsError } = await supabase
+          .from('service_items')
+          .select('id, service_id, description, cost')
+          .in('service_id', servicesData?.map(s => s.id) || []);
+
+        if (itemsError) throw itemsError;
+
+        // Fetch service attachments for all services
+        const { data: serviceAttachmentsData, error: attachmentsError } = await supabase
+          .from('service_attachments')
+          .select('id, service_id, name, file_url')
+          .in('service_id', servicesData?.map(s => s.id) || []);
+
+        if (attachmentsError) throw attachmentsError;
+
+        // Fetch registration PDFs for all cars
+        const { data: regPdfsData, error: regPdfsError } = await supabase
+          .from('registration_pdfs')
+          .select('id, car_id, name, file_url')
+          .in('car_id', carsData?.map(c => c.id) || []);
+
+        if (regPdfsError) throw regPdfsError;
+
         if (!mounted) return;
 
-        const normalized: Car[] = (data || []).map((c: any) => ({
-          ...c,
-          carLogo: c.car_logo,
-          registrationNumber: c.registration_number,
-          trafficPermit: c.traffic_permit,
-          vignetteExpiry: c.vignette_expiry,
-          currentMileage: c.current_mileage,
-          registrationPdfs: (c.registration_pdfs || []).map((p: any) => ({ name: p.name, fileUrl: p.file_url })),
-          services: (c.services || []).map((s: any) => ({
+        // Group service items by service_id
+        const itemsByService: Record<string, any[]> = {};
+        (serviceItemsData || []).forEach(item => {
+          if (!itemsByService[item.service_id]) itemsByService[item.service_id] = [];
+          itemsByService[item.service_id].push({
+            id: item.id,
+            description: item.description,
+            cost: item.cost
+          });
+        });
+
+        // Group service attachments by service_id
+        const attachmentsByService: Record<string, any[]> = {};
+        console.log('serviceAttachmentsData', serviceAttachmentsData);
+        (serviceAttachmentsData || []).forEach(att => {
+          if (!attachmentsByService[att.service_id]) attachmentsByService[att.service_id] = [];
+          attachmentsByService[att.service_id].push({
+            id: att.id,
+            name: att.name,
+            fileUrl: att.file_url
+          });
+        });
+        console.log('attachmentsByService', attachmentsByService);
+        console.log('servicesData', servicesData);
+        // Group services by car_id with their items and attachments
+        const servicesByCar: Record<string, any[]> = {};
+        (servicesData || []).forEach(s => {
+          if (!servicesByCar[s.car_id]) servicesByCar[s.car_id] = [];
+          servicesByCar[s.car_id].push({
             id: s.id,
             date: s.date,
             mileage: s.mileage,
             paid: s.paid,
-            items: (s.service_items || []).map((it: any) => ({ id: it.id, description: it.description, cost: it.cost })),
-            attachments: (s.attachments || []).map((a: any) => ({ id: a.id, name: a.name, fileUrl: a.file_url }))
-          }))
+            items: itemsByService[s.id] || [],
+            attachments: attachmentsByService[s.id] || []
+          });
+        });
+        console.log('servicesByCar', servicesByCar);
+
+        // Group registration PDFs by car_id
+        const regPdfsByCar: Record<string, any[]> = {};
+        (regPdfsData || []).forEach(p => {
+          if (!regPdfsByCar[p.car_id]) regPdfsByCar[p.car_id] = [];
+          regPdfsByCar[p.car_id].push({
+            id: p.id,
+            name: p.name,
+            fileUrl: p.file_url
+          });
+        });
+
+        // Combine cars with their services and registration PDFs
+        const normalized: Car[] = (carsData || []).map((c: any) => ({
+          ...c,
+          carLogo: c.car_logo,
+          registrationNumber: c.registration_number,
+          trafficPermit: c.traffic_permit,
+          registrationExpiry: c.registration_expiry,
+          registrationPdfs: regPdfsByCar[c.id] || [],
+          vignetteExpiry: c.vignette_expiry,
+          currentMileage: c.current_mileage,
+          services: servicesByCar[c.id] || []
         }));
 
         setCars(normalized);
@@ -92,13 +169,8 @@ export const CarsGrid = () => {
           <CarCard key={car.id} car={car} />
         ))}
       </div>
-      <button style={{marginLeft: '10px'}}
-                    className="toggle-services"
-                    onClick={() => setShowParkingGrid(!showParkingGrid)}
-                >
-                    {showParkingGrid ? 'Skrij parkirišče' : 'Pokaži parkirišče'}
-                </button>
-      {showParkingGrid && (<ParkingGrid cars={cars} />)}
+
+      <ParkingGrid cars={cars} />
     </>
   );
 };
