@@ -29,11 +29,12 @@ export const CarsGrid = () => {
 
         const userId = user.id;
 
-        // Fetch cars
+        // Fetch cars (skip Renault Grand Scenic)
         const { data: carsData, error: carsError } = await supabase
           .from('cars')
           .select('*')
           .eq('user_id', userId)
+          .neq('make', 'Renault Grand Scenic III')
           .order('id', { ascending: true });
 
         if (carsError) throw carsError;

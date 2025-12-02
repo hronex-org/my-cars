@@ -1,15 +1,9 @@
 .cars-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
   padding: 20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-}
-
-.cars-grid > * {
-  flex: 0 0 320px;
-  scroll-snap-align: start;
+  width: 100%;
 }
 
 .cars-grid-loading,
@@ -29,11 +23,8 @@
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .cars-grid {
+    grid-template-columns: repeat(2, 1fr);
     padding: 12px;
     gap: 12px;
-  }
-
-  .cars-grid > * {
-    flex: 0 0 280px;
   }
 }
